@@ -1,9 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 ext {
-    compileSdkVersion = 26
+    minSdkVersion = 15
+    targetSdkVersion = 25
+    compileSdkVersion = 25
     buildToolsVersion = '26.0.1'
     applicationId = "ru.yandex.subtitles"
-    supportVersion = '26.1.0'
+    supportVersion = '25.4.0'
 }
 buildscript {
     repositories {

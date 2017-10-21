@@ -14,8 +14,8 @@ android {
     buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 26
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
 
         versionCode code
         versionName "${MAJOR_VERSION}.${MINOR_VERSION}.${VERSION_PATCH}"
