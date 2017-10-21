@@ -86,7 +86,7 @@ public class Table {
     public static void createIndex(final SQLiteDatabase db, final String table,
                                    final String name, final String[] onColumns) {
         final String sql = "CREATE INDEX IF NOT EXISTS " + name + INDEX_SFX + " ON " + table +
-                "(" + TextUtilsExt.join(", ", onColumns) + ");";
+                "(" + TextUtilsExt.join(", ", (Object[]) onColumns) + ");";
         db.execSQL(sql);
     }
 
