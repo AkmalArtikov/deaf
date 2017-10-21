@@ -219,5 +219,6 @@
     <string name="open_settings">К настройкам</string>
 
     <string name="dialog_button_neutral">Понятно</string>
+    <string name="err_record_permission_denied">К сожалению, без данного разрешения мы не можем использовать распознавание речи</string>
 
 </resources>

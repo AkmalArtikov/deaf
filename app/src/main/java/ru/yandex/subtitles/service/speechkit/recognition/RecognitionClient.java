@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 YA LLC
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -78,6 +78,7 @@ public class RecognitionClient extends RecognizerListenerAdapter {
         RecognitionBroadcastReceiver.onRecognitionStarted(mContext, mThreadId, resumedAfterPlaying);
     }
 
+    @SuppressWarnings("MissingPermission") // checking in ConversationActivity
     private void startRecognizer() {
         final Recognizer recognizer = createRecognizer(mLocale, this);
         mRecognizers.add(recognizer);

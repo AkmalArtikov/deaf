@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 YA LLC
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +35,7 @@ public final class ShareUtils {
 
     private static final String LOG_TAG = "ShareUtils";
 
-    public static final String MIMETYPE_TEXT_PLAIN = "text/plain";
+    private static final String MIMETYPE_TEXT_PLAIN = "text/plain";
 
     private static final String MAIL_TO_FORMAT = "mailto:%1$s?subject=%2$s&body=%3$s";
 
@@ -49,7 +49,7 @@ public final class ShareUtils {
         // It's better to use Uri.Builder instead of building strings
         // but Mail.ru app does not work correctly with default 'mailto:' scheme.
         final String mailToScheme = String.format(MAIL_TO_FORMAT,
-                TextUtilsExt.join(",", (String[]) addresses),
+                TextUtilsExt.join(",", (Object[]) addresses),
                 Uri.encode(subject), Uri.encode(body));
         final Uri uri = Uri.parse(mailToScheme);
 
