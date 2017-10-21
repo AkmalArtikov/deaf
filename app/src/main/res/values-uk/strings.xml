@@ -181,5 +181,6 @@
     <string name="open_settings">До налаштувань</string>
 
     <string name="dialog_button_neutral">Зрозуміло</string>
+    <string name="err_record_permission_denied">На жаль, без цього дозволу ми не можемо використовувати розпізнавання мови</string>
 
 </resources>

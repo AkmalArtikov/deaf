@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015 YA LLC
  * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  */
 package ru.yandex.subtitles.ui.activity;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -25,10 +26,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
+import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import java.lang.ref.WeakReference;
+
+import io.reactivex.functions.Consumer;
 import ru.yandex.speechkit.Error;
 import ru.yandex.subtitles.R;
 import ru.yandex.subtitles.analytics.ConversationMetadata;
@@ -67,6 +75,7 @@ public class ConversationActivity extends AbstractActivity
 
     private static final String EXTRA_THREAD = "thread_id";
     private static final String EXTRA_FROM_WIDGET = "from_widget";
+    private static final String LOG_TAG = ConversationActivity.class.getSimpleName();
 
     public static void startConversation(final Context context) {
         startConversation(context, null);
@@ -285,9 +294,30 @@ public class ConversationActivity extends AbstractActivity
 
     private void autoStartRecognition() {
         if (mSpeechKitInitialized && mRecognitionStarted && isActivityResumed()) {
-            mRecognitionStarted = true;
-            mMicrophoneBarView.setState(MicrophoneBarController.STATE_IN_PROGRESS);
-            MessagingService.startRecognition(this, mThreadId);
+            final WeakReference<ConversationActivity> activityRef = new WeakReference<>(this);
+            new RxPermissions(this)
+                    .request(Manifest.permission.RECORD_AUDIO)
+                    .subscribe(new Consumer<Boolean>() {
+                        @Override
+                        public void accept(Boolean granted) throws Exception {
+                            ConversationActivity activity = activityRef.get();
+                            if (activity != null) {
+                                if (granted) {
+                                    mRecognitionStarted = true;
+                                    mMicrophoneBarView.setState(MicrophoneBarController.STATE_IN_PROGRESS);
+                                    MessagingService.startRecognition(activity, mThreadId);
+                                } else {
+                                    Toast.makeText(activity, activity.getString(R.string.err_record_permission_denied),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            Log.e(LOG_TAG, throwable.getMessage());
+                        }
+                    });
         }
     }
 
@@ -314,6 +344,9 @@ public class ConversationActivity extends AbstractActivity
                 mRecognitionStarted = false;
                 mMicrophoneBarView.setState(MicrophoneBarController.STATE_STOPPING);
                 MessagingService.stopRecognition(this);
+                break;
+            case MicrophoneBarController.STATE_DISABLED:
+                // nothing
                 break;
         }
     }
